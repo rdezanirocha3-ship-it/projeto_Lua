@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Achadinhos Shopee &amp; Mercado Livre</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --text: #1c1e21;
+      --muted: #65676b;
+      --border: #e4e6eb;
+      --shopee: #ee4d2d;
+      --shopee-soft: #fff1ee;
+      --ml: #ffe600;
+      --ml-dark: #2d3277;
+      --ml-soft: #fffbe0;
+      --accent: #00a650;
+      --radius: 14px;
+      --shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1f2430 0%, #2d3277 60%, #ee4d2d 140%);
+      color: #fff;
+      padding: 28px 16px 36px;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand h1 {
+      font-size: 1.55rem;
+      letter-spacing: -0.02em;
+    }
+
+    .badges-inline {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-store {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .pill-shopee {
+      background: var(--shopee);
+      color: #fff;
+    }
+
+    .pill-ml {
+      background: var(--ml);
+      color: var(--ml-dark);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-add {
+      background: #fff;
+      color: var(--text);
+      border: none;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-add:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    .btn-reset {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-reset:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .controls-bar {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-top: -22px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active[data-store="all"] {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+
+    .tab-btn.active[data-store="shopee"] {
+      background: var(--shopee);
+      color: #fff;
+      border-color: var(--shopee);
+    }
+
+    .tab-btn.active[data-store="ml"] {
+      background: var(--ml);
+      color: var(--ml-dark);
+      border-color: #e5cf00;
+    }
+
+    .search-sort {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 1 1 320px;
+      justify-content: flex-end;
+    }
+
+    .search-input,
+    .sort-select {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .search-input {
+      flex: 1 1 190px;
+      min-width: 160px;
+    }
+
+    .search-input:focus,
+    .sort-select:focus {
+      border-color: var(--ml-dark);
+      background: #fff;
+    }
+
+    .meta-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 14px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+      gap: 18px;
+      padding-bottom: 44px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .card-img-wrap {
+      position: relative;
+      background: #f9fafb;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .store-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .tag-shopee {
+      background: var(--shopee);
+      color: #fff;
+    }
+
+    .tag-ml {
+      background: var(--ml);
+      color: var(--ml-dark);
+    }
+
+    .discount-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 166, 80, 0.95);
+      color: #fff;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .card-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 8px;
+    }
+
+    .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-category {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .delete-btn:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .card-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .price-box {
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
+    .old-price {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: line-through;
+      margin-right: 6px;
+    }
+
+    .price {
+      font-size: 1.22rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .installments {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .buy-btn {
+      margin-top: 8px;
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 10px 12px;
+      border-radius: 10px;
+      transition: filter 0.15s ease;
+    }
+
+    .buy-btn:hover {
+      filter: brightness(0.95);
+    }
+
+    .btn-shopee {
+      background: var(--shopee);
+      color: #fff;
+    }
+
+    .btn-ml {
+      background: var(--ml);
+      color: var(--ml-dark);
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 16px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px dashed var(--border);
+      color: var(--muted);
+    }
+
+    /* Modal para adicionar achadinho */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      width: 100%;
+      max-width: 460px;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal h2 {
+      font-size: 1.15rem;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 0.9rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 9px 14px;
+      border-radius: 9px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--ml-dark);
+      color: #fff;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 9px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 16px 32px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-top">
+        <div class="brand">
+          <h1>Achadinhos do Dia</h1>
+          <div class="badges-inline">
+            <span class="pill-store pill-shopee">Shopee</span>
+            <span class="pill-store pill-ml">Mercado Livre</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-reset" id="resetDealsBtn" type="button" title="Restaurar exemplos iniciais">
+            Restaurar padrão
+          </button>
+          <button class="btn-add" id="openModalBtn" type="button">+ Adicionar achadinho</button>
+        </div>
+      </div>
+      <p style="opacity: 0.9; font-size: 0.95rem;">
+        Ofertas da Shopee e do Mercado Livre misturadas no mesmo lugar para você comparar e aproveitar na hora.
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls-bar" aria-label="Filtros e busca">
+      <div class="filter-tabs" role="tablist">
+        <button class="tab-btn active" data-store="all" type="button">Todos (Shopee + ML)</button>
+        <button class="tab-btn" data-store="shopee" type="button">Só Shopee</button>
+        <button class="tab-btn" data-store="ml" type="button">Só Mercado Livre</button>
+      </div>
+
+      <div class="search-sort">
+        <input
+          class="search-input"
+          id="searchInput"
+          type="search"
+          placeholder="Buscar produto ou categoria..."
+        />
+        <select class="sort-select" id="sortSelect" aria-label="Ordenar achadinhos">
+          <option value="featured">Destaques misturados</option>
+          <option value="price-asc">Menor preço</option>
+          <option value="price-desc">Maior preço</option>
+          <option value="discount-desc">Maior desconto</option>
+        </select>
+      </div>
+    </section>
+
+    <div class="meta-info">
+      <span id="resultsCount">Carregando achadinhos...</span>
+      <span>Links de afiliado • Preços sujeitos a alteração</span>
+    </div>
+
+    <section class="grid" id="dealsGrid" aria-live="polite"></section>
+  </main>
+
+  <!-- Modal para cadastrar novos links de afiliado -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <h2 id="modalTitle">Novo Achadinho de Afiliado</h2>
+      <form id="dealForm">
+        <div class="form-group">
+          <label for="dealStore">Loja</label>
+          <select id="dealStore" required>
+            <option value="shopee">Shopee</option>
+            <option value="ml">Mercado Livre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dealTitle">Nome do produto</label>
+          <input id="dealTitle" type="text" required placeholder="Ex: Mini Processador USB 250ml" />
+        </div>
+        <div class="form-group">
+          <label for="dealCategory">Categoria</label>
+          <input id="dealCategory" type="text" required placeholder="Ex: Cozinha, Casa, Tech" />
+        </div>
+        <div class="form-group">
+          <label for="dealPrice">Preço atual (R$)</label>
+          <input id="dealPrice" type="number" step="0.01" min="0.01" required placeholder="49.90" />
+        </div>
+        <div class="form-group">
+          <label for="dealOldPrice">Preço original opcional (R$)</label>
+          <input id="dealOldPrice" type="number" step="0.01" min="0" placeholder="79.90" />
+        </div>
+        <div class="form-group">
+          <label for="dealImage">URL da imagem (opcional)</label>
+          <input id="dealImage" type="url" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label for="dealUrl">Seu link de afiliado (Shopee ou Mercado Livre)</label>
+          <input id="dealUrl" type="url" required placeholder="https://s.shopee.com.br/... ou https://mercadolivre.com/sec/..." />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="closeModalBtn" type="button">Cancelar</button>
+          <button class="btn-primary" type="submit">Salvar achadinho</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    Página de achadinhos afiliados Shopee &amp; Mercado Livre
+  </footer>
+
+  <script>
+    const STORAGE_KEY = "achadinhos_shopee_ml_v1";
+
+    // Exemplo inicial intercalando Shopee e Mercado Livre
+    // Troque "url" pelo seu link de afiliado real da Shopee ou do Mercado Livre
+    const DEFAULT_DEALS = [
+      {
+        id: "1",
+        store: "shopee",
+        title: "Mini Processador de Alimentos Elétrico USB 250ml",
+        category: "Cozinha",
+        price: 34.9,
+        oldPrice: 59.9,
+        discount: 42,
+        installments: "Confira cupons na Shopee",
+        image: "",
+        url: "https://shopee.com.br"
+      },
+      {
+        id: "2",
+        store: "ml",
+        title: "Fone de Ouvido Bluetooth Sem Fio Cancelamento de Ruído",
+        category: "Tech",
+        price: 129.9,
+        oldPrice: 189.9,
+        discount: 32,
+        installments: "Em até 10x sem juros",
+        image: "",
+        url: "https://www.mercadolivre.com.br"
+      },
+      {
+        id: "3",
+        store: "shopee",
+        title: "Kit 3 Organizadores de Gaveta Dobráveis em Tecido",
+        category: "Casa",
+        price: 27.5,
+        oldPrice: 39.9,
+        discount: 31,
+        installments: "Confira cupons na Shopee",
+        image: "",
+        url: "https://shopee.com.br"
+      },
+      {
+        id: "4",
+        store: "ml",
+        title: "Garrafa Térmica Inox 950ml Mantém Gelado 24h",
+        category: "Casa",
+        price: 89.0,
+        oldPrice: 119.0,
+        discount: 25,
+        installments: "Em até 6x sem juros",
+        image: "",
+        url: "https://www.mercadolivre.com.br"
+      }
+    ];
+
+    function escapeHTML(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function sanitizeUrl(url, fallback = "#") {
+      try {
+        const parsed = new URL(url);
+        if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+          return parsed.href;
+        }
+        return fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function loadDeals() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return [...DEFAULT_DEALS];
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) && parsed.length ? parsed : [...DEFAULT_DEALS];
+      } catch {
+        return [...DEFAULT_DEALS];
+      }
+    }
+
+    function saveDeals(deals) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(deals));
+    }
+
+    let deals = loadDeals();
+    let activeStore = "all";
+    let searchQuery = "";
+    let sortBy = "featured";
+
+    const dealsGrid = document.getElementById("dealsGrid");
+    const resultsCount = document.getElementById("resultsCount");
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sortSelect");
+    const tabButtons = document.querySelectorAll(".tab-btn");
+
+    function formatBRL(value) {
+      return Number(value).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function getFilteredDeals() {
+      const q = searchQuery.trim().toLowerCase();
+
+      const list = deals.filter((item) => {
+        const matchesStore = activeStore === "all" || item.store === activeStore;
+        const matchesQuery =
+          !q ||
+          String(item.title || "").toLowerCase().includes(q) ||
+          String(item.category || "").toLowerCase().includes(q);
+        return matchesStore && matchesQuery;
+      });
+
+      if (sortBy === "price-asc") {
+        list.sort((a, b) => Number(a.price) - Number(b.price));
+      } else if (sortBy === "price-desc") {
+        list.sort((a, b) => Number(b.price) - Number(a.price));
+      } else if (sortBy === "discount-desc") {
+        list.sort((a, b) => Number(b.discount || 0) - Number(a.discount || 0));
+      }
+
+      return list;
+    }
+
+    function renderDeals() {
+      const list = getFilteredDeals();
+      const shopeeCount = list.filter((i) => i.store === "shopee").length;
+      const mlCount = list.filter((i) => i.store === "ml").length;
+
+      resultsCount.textContent =
+        `${list.length} achadinho(s) exibido(s) (${shopeeCount} Shopee • ${mlCount} Mercado Livre)`;
+
+      if (!list.length) {
+        dealsGrid.innerHTML = `
+          <div class="empty-state">
+            Nenhum achadinho encontrado com esse filtro. Tente outra palavra-chave ou clique em "Todos (Shopee + ML)".
+          </div>
+        `;
+        return;
+      }
+
+      dealsGrid.innerHTML = list
+        .map((item) => {
+          const isShopee = item.store === "shopee";
+          const storeLabel = isShopee ? "Shopee" : "Mercado Livre";
+          const tagClass = isShopee ? "tag-shopee" : "tag-ml";
+          const btnClass = isShopee ? "btn-shopee" : "btn-ml";
+          const fallbackImg = isShopee
+            ? "https://placehold.co/500x500/fff1ee/ee4d2d?text=Shopee"
+            : "https://placehold.co/500x500/fffbe0/2d3277?text=Mercado+Livre";
+
+          const safeImg = sanitizeUrl(item.image, fallbackImg);
+          const safeUrl = sanitizeUrl(item.url, "#");
+          const safeTitle = escapeHTML(item.title);
+          const safeCategory = escapeHTML(item.category);
+          const safeInstallments = escapeHTML(item.installments);
+          const safeId = escapeHTML(item.id);
+
+          return `
+            <article class="card">
+              <div class="card-img-wrap">
+                <span class="store-tag ${tagClass}">${storeLabel}</span>
+                ${item.discount ? `<span class="discount-tag">-${Number(item.discount)}%</span>` : ""}
+                <img
+                  src="${escapeHTML(safeImg)}"
+                  alt="${safeTitle}"
+                  loading="lazy"
+                  onerror="this.onerror=null;this.src='${escapeHTML(fallbackImg)}'"
+                />
+              </div>
+              <div class="card-body">
+                <div class="card-top-row">
+                  <span class="card-category">${safeCategory}</span>
+                  <button
+                    class="delete-btn"
+                    type="button"
+                    data-delete-id="${safeId}"
+                    title="Remover achadinho"
+                    aria-label="Remover ${safeTitle}"
+                  >
+                    Excluir
+                  </button>
+                </div>
+                <h2 class="card-title" title="${safeTitle}">${safeTitle}</h2>
+                <div class="price-box">
+                  ${item.oldPrice ? `<span class="old-price">${formatBRL(item.oldPrice)}</span>` : ""}
+                  <div class="price">${formatBRL(item.price)}</div>
+                  ${item.installments ? `<div class="installments">${safeInstallments}</div>` : ""}
+                </div>
+                <a
+                  class="buy-btn ${btnClass}"
+                  href="${escapeHTML(safeUrl)}"
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                >
+                  Ver na ${storeLabel}
+                </a>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    }
+
+    dealsGrid.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-delete-id]");
+      if (!btn) return;
+      const idToRemove = btn.getAttribute("data-delete-id");
+      deals = deals.filter((item) => String(item.id) !== idToRemove);
+      saveDeals(deals);
+      renderDeals();
+    });
+
+    document.getElementById("resetDealsBtn").addEventListener("click", () => {
+      deals = [...DEFAULT_DEALS];
+      saveDeals(deals);
+      renderDeals();
+    });
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeStore = btn.dataset.store;
+        renderDeals();
+      });
+    });
+
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderDeals();
+    });
+
+    sortSelect.addEventListener("change", (e) => {
+      sortBy = e.target.value;
+      renderDeals();
+    });
+
+    // Controle do modal para adicionar novos achadinhos
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const dealForm = document.getElementById("dealForm");
+
+    openModalBtn.addEventListener("click", () => {
+      modalBackdrop.classList.add("open");
+      document.getElementById("dealTitle").focus();
+    });
+
+    function closeModal() {
+      modalBackdrop.classList.remove("open");
+      dealForm.reset();
+    }
+
+    closeModalBtn.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modalBackdrop.classList.contains("open")) {
+        closeModal();
+      }
+    });
+
+    dealForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const store = document.getElementById("dealStore").value;
+      const title = document.getElementById("dealTitle").value.trim();
+      const category = document.getElementById("dealCategory").value.trim();
+      const price = parseFloat(document.getElementById("dealPrice").value);
+      const oldPriceRaw = document.getElementById("dealOldPrice").value;
+      const oldPrice = oldPriceRaw ? parseFloat(oldPriceRaw) : null;
+      const image = sanitizeUrl(document.getElementById("dealImage").value.trim(), "");
+      const url = sanitizeUrl(document.getElementById("dealUrl").value.trim(), "#");
+
+      if (!title || !category || Number.isNaN(price) || price <= 0) return;
+
+      let discount = null;
+      if (oldPrice && !Number.isNaN(oldPrice) && oldPrice > price) {
+        discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+      }
+
+      const newDeal = {
+        id: String(Date.now()),
+        store,
+        title,
+        category,
+        price,
+        oldPrice: oldPrice && oldPrice > price ? oldPrice : null,
+        discount,
+        installments: store === "ml" ? "Confira condições no Mercado Livre" : "Confira cupons na Shopee",
+        image,
+        url
+      };
+
+      deals = [newDeal, ...deals];
+      saveDeals(deals);
+      renderDeals();
+      closeModal();
+    });
+
+    // Renderiza já na entrada misturando Shopee e Mercado Livre
+    renderDeals();
+  </script>
+</body>
+</html>
